@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icon/bell.png</file>
+        <file>icon/reminder.png</file>
+        <file>icon/calendar.png</file>
+        <file>icon/event.png</file>
+        <file>icon/check.png</file>
+        <file>icon/sign-error.png</file>
+        <file>icon/seeting.png</file>
+        <file>icon/work_time.png</file>
+        <file>icon/internet.png</file>
+    </qresource>
+</RCC>

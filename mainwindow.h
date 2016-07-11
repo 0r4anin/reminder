@@ -23,10 +23,15 @@ signals:
 
 private:
     Ui::MainWindow *ui;
+    bool _readyToClose;
+    Reminder *_r;
 
 protected:
     virtual void closeEvent(QCloseEvent *event);
 
+
+private slots:
+    void on_action_triggered();
 };
 
 #endif // MAINWINDOW_H

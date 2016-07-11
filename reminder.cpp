@@ -4,6 +4,8 @@
 #include <QCoreApplication>
 #include <QFile>
 #include <QTimer>
+#include <QSqlQuery>
+#include <QMenu>
 
 #include <reminder_def.h>
 //используем screensaver
@@ -28,6 +30,16 @@ Reminder::Reminder(QObject *parent) : QObject(parent)
     trayIcon->setToolTip(trUtf8("Напоминалка"));
     trayIcon->setVisible(true);
 
+    QMenu *mn = new QMenu();
+    mn->addAction("О программе", this, SIGNAL(showAboutWindow()));
+    mn->addAction("Показать насткойки", this, SIGNAL(showSettingsWindow()));
+    mn->addSeparator();
+    mn->addAction("Выйти из программы", this, SIGNAL(aboutToClose()));
+
+    trayIcon->setContextMenu(mn);
+
+    _mn = mn;
+
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(triggerTrayIcon(QSystemTrayIcon::ActivationReason)));
     _lastReminde = QDateTime::currentDateTime();
 }
@@ -41,6 +53,20 @@ void Reminder::rereadsettings()
 {
     //Нужно завести таймер на периодические напомнинания
 
+    if (!_db.isOpen())
+    {
+        _db.setDatabaseName(QCoreApplication::applicationDirPath() + SETTINGSDB_PATH);
+        if (!_db.open())
+        {
+            QMessageBox::critical(0, trUtf8("Напоминалка"),
+                                  trUtf8("Не могу открыть базу с настройками %1").arg(SETTINGSDB_PATH),
+                                  QMessageBox::Ok);
+        }
+    }
+
+//    QSqlQuery query;
+    //нужно вычитать настройки по event`ам
+//    query.exec();
 }
 
 void Reminder::showTrayIcon()
@@ -74,6 +100,9 @@ void Reminder::triggerTrayIcon(QSystemTrayIcon::ActivationReason reason)
 //    Trigger,
 //    MiddleClick
     switch (reason) {
+    case QSystemTrayIcon::MiddleClick:
+        _mn->show();
+        break;
     case QSystemTrayIcon::DoubleClick:
         emit showSettingsWindow();
         break;
@@ -106,16 +135,7 @@ void Reminder::checkDataBase()
 
     _db = QSqlDatabase::addDatabase("QSQLITE");
 
-    if (!_db.isOpen())
-    {
-        _db.setDatabaseName(QCoreApplication::applicationDirPath() + SETTINGSDB_PATH);
-        if (!_db.open())
-        {
-            QMessageBox::critical(0, trUtf8("Напоминалка"),
-                                  trUtf8("Не могу открыть базу с настройками %1").arg(SETTINGSDB_PATH),
-                                  QMessageBox::Ok);
-        }
-    }
+
 }
 
 quint64 Reminder::getIddleTime()

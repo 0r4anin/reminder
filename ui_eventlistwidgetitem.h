@@ -21,6 +21,7 @@
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QTimeEdit>
+#include <QtWidgets/QToolButton>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
@@ -32,8 +33,8 @@ public:
     QGridLayout *gridLayout;
     QGroupBox *groupBox;
     QGridLayout *gridLayout_2;
-    QLabel *checkButton;
     QLabel *image;
+    QToolButton *checkButton;
     QVBoxLayout *verticalLayout;
     QLabel *eventName;
     QHBoxLayout *horizontalLayout;
@@ -140,70 +141,6 @@ public:
         gridLayout_2->setSpacing(0);
         gridLayout_2->setObjectName(QStringLiteral("gridLayout_2"));
         gridLayout_2->setContentsMargins(0, 0, 0, 0);
-        checkButton = new QLabel(groupBox);
-        checkButton->setObjectName(QStringLiteral("checkButton"));
-        checkButton->setMinimumSize(QSize(128, 128));
-        checkButton->setMaximumSize(QSize(128, 128));
-        QPalette palette1;
-        palette1.setBrush(QPalette::Active, QPalette::WindowText, brush);
-        QBrush brush5(QColor(255, 251, 251, 255));
-        brush5.setStyle(Qt::SolidPattern);
-        palette1.setBrush(QPalette::Active, QPalette::Button, brush5);
-        palette1.setBrush(QPalette::Active, QPalette::Light, brush1);
-        QBrush brush6(QColor(255, 253, 253, 255));
-        brush6.setStyle(Qt::SolidPattern);
-        palette1.setBrush(QPalette::Active, QPalette::Midlight, brush6);
-        QBrush brush7(QColor(127, 125, 125, 255));
-        brush7.setStyle(Qt::SolidPattern);
-        palette1.setBrush(QPalette::Active, QPalette::Dark, brush7);
-        QBrush brush8(QColor(170, 167, 167, 255));
-        brush8.setStyle(Qt::SolidPattern);
-        palette1.setBrush(QPalette::Active, QPalette::Mid, brush8);
-        palette1.setBrush(QPalette::Active, QPalette::Text, brush);
-        palette1.setBrush(QPalette::Active, QPalette::BrightText, brush1);
-        palette1.setBrush(QPalette::Active, QPalette::ButtonText, brush);
-        palette1.setBrush(QPalette::Active, QPalette::Base, brush1);
-        palette1.setBrush(QPalette::Active, QPalette::Window, brush5);
-        palette1.setBrush(QPalette::Active, QPalette::Shadow, brush);
-        palette1.setBrush(QPalette::Active, QPalette::AlternateBase, brush6);
-        palette1.setBrush(QPalette::Active, QPalette::ToolTipBase, brush4);
-        palette1.setBrush(QPalette::Active, QPalette::ToolTipText, brush);
-        palette1.setBrush(QPalette::Inactive, QPalette::WindowText, brush);
-        palette1.setBrush(QPalette::Inactive, QPalette::Button, brush5);
-        palette1.setBrush(QPalette::Inactive, QPalette::Light, brush1);
-        palette1.setBrush(QPalette::Inactive, QPalette::Midlight, brush6);
-        palette1.setBrush(QPalette::Inactive, QPalette::Dark, brush7);
-        palette1.setBrush(QPalette::Inactive, QPalette::Mid, brush8);
-        palette1.setBrush(QPalette::Inactive, QPalette::Text, brush);
-        palette1.setBrush(QPalette::Inactive, QPalette::BrightText, brush1);
-        palette1.setBrush(QPalette::Inactive, QPalette::ButtonText, brush);
-        palette1.setBrush(QPalette::Inactive, QPalette::Base, brush1);
-        palette1.setBrush(QPalette::Inactive, QPalette::Window, brush5);
-        palette1.setBrush(QPalette::Inactive, QPalette::Shadow, brush);
-        palette1.setBrush(QPalette::Inactive, QPalette::AlternateBase, brush6);
-        palette1.setBrush(QPalette::Inactive, QPalette::ToolTipBase, brush4);
-        palette1.setBrush(QPalette::Inactive, QPalette::ToolTipText, brush);
-        palette1.setBrush(QPalette::Disabled, QPalette::WindowText, brush7);
-        palette1.setBrush(QPalette::Disabled, QPalette::Button, brush5);
-        palette1.setBrush(QPalette::Disabled, QPalette::Light, brush1);
-        palette1.setBrush(QPalette::Disabled, QPalette::Midlight, brush6);
-        palette1.setBrush(QPalette::Disabled, QPalette::Dark, brush7);
-        palette1.setBrush(QPalette::Disabled, QPalette::Mid, brush8);
-        palette1.setBrush(QPalette::Disabled, QPalette::Text, brush7);
-        palette1.setBrush(QPalette::Disabled, QPalette::BrightText, brush1);
-        palette1.setBrush(QPalette::Disabled, QPalette::ButtonText, brush7);
-        palette1.setBrush(QPalette::Disabled, QPalette::Base, brush5);
-        palette1.setBrush(QPalette::Disabled, QPalette::Window, brush5);
-        palette1.setBrush(QPalette::Disabled, QPalette::Shadow, brush);
-        palette1.setBrush(QPalette::Disabled, QPalette::AlternateBase, brush5);
-        palette1.setBrush(QPalette::Disabled, QPalette::ToolTipBase, brush4);
-        palette1.setBrush(QPalette::Disabled, QPalette::ToolTipText, brush);
-        checkButton->setPalette(palette1);
-        checkButton->setPixmap(QPixmap(QString::fromUtf8(":/icon/check.png")));
-        checkButton->setScaledContents(false);
-
-        gridLayout_2->addWidget(checkButton, 0, 3, 1, 1);
-
         image = new QLabel(groupBox);
         image->setObjectName(QStringLiteral("image"));
         QSizePolicy sizePolicy1(QSizePolicy::Fixed, QSizePolicy::Fixed);
@@ -217,6 +154,34 @@ public:
         image->setScaledContents(true);
 
         gridLayout_2->addWidget(image, 0, 0, 1, 1);
+
+        checkButton = new QToolButton(groupBox);
+        checkButton->setObjectName(QStringLiteral("checkButton"));
+        checkButton->setMinimumSize(QSize(128, 128));
+        checkButton->setMaximumSize(QSize(128, 128));
+        QPalette palette1;
+        palette1.setBrush(QPalette::Active, QPalette::Button, brush1);
+        palette1.setBrush(QPalette::Active, QPalette::Base, brush1);
+        palette1.setBrush(QPalette::Active, QPalette::Window, brush1);
+        palette1.setBrush(QPalette::Inactive, QPalette::Button, brush1);
+        palette1.setBrush(QPalette::Inactive, QPalette::Base, brush1);
+        palette1.setBrush(QPalette::Inactive, QPalette::Window, brush1);
+        palette1.setBrush(QPalette::Disabled, QPalette::Button, brush1);
+        palette1.setBrush(QPalette::Disabled, QPalette::Base, brush1);
+        palette1.setBrush(QPalette::Disabled, QPalette::Window, brush1);
+        checkButton->setPalette(palette1);
+        checkButton->setAutoFillBackground(true);
+        checkButton->setStyleSheet(QLatin1String("QToolButton#checkButton {\n"
+"	background-color: white\n"
+"}"));
+        QIcon icon;
+        icon.addFile(QStringLiteral(":/icon/sign-error.png"), QSize(), QIcon::Normal, QIcon::Off);
+        checkButton->setIcon(icon);
+        checkButton->setIconSize(QSize(128, 128));
+        checkButton->setPopupMode(QToolButton::InstantPopup);
+        checkButton->setAutoRaise(true);
+
+        gridLayout_2->addWidget(checkButton, 0, 3, 1, 1);
 
         verticalLayout = new QVBoxLayout();
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
@@ -293,8 +258,8 @@ public:
     {
         uilistitem->setWindowTitle(QApplication::translate("uilistitem", "Form", 0));
         groupBox->setTitle(QString());
-        checkButton->setText(QString());
         image->setText(QString());
+        checkButton->setText(QString());
         eventName->setText(QApplication::translate("uilistitem", "Event Name", 0));
         label->setText(QApplication::translate("uilistitem", "\320\222\321\200\320\265\320\274\321\217 \321\201\321\200\320\260\320\261\320\260\321\202\321\213\320\262\320\260\320\275\320\270\321\217:", 0));
         label_2->setText(QApplication::translate("uilistitem", "\320\237\320\276\320\262\321\202\320\276\321\200\320\275\320\276\320\265 \321\201\321\200\320\260\320\261\320\260\321\202\321\213\320\262\320\260\320\275\320\270\320\265:", 0));

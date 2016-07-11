@@ -52,9 +52,10 @@ public:
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         gridLayout = new QGridLayout(centralWidget);
-        gridLayout->setSpacing(6);
+        gridLayout->setSpacing(2);
         gridLayout->setContentsMargins(11, 11, 11, 11);
         gridLayout->setObjectName(QStringLiteral("gridLayout"));
+        gridLayout->setContentsMargins(2, 2, 2, 2);
         listWidget = new QListWidget(centralWidget);
         QIcon icon;
         icon.addFile(QStringLiteral(":/icon/event.png"), QSize(), QIcon::Normal, QIcon::Off);
@@ -70,8 +71,33 @@ public:
         QListWidgetItem *__qlistwidgetitem1 = new QListWidgetItem(listWidget);
         __qlistwidgetitem1->setFont(font);
         __qlistwidgetitem1->setIcon(icon1);
+        __qlistwidgetitem1->setFlags(Qt::ItemIsSelectable|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
         listWidget->setObjectName(QStringLiteral("listWidget"));
-        listWidget->setMaximumSize(QSize(150, 16777215));
+        listWidget->setMaximumSize(QSize(152, 16777215));
+        listWidget->setStyleSheet(QLatin1String("QListWidget#listWidget {\n"
+"\n"
+"	border: 2px solid darkgray;\n"
+"    selection-background-color: lightgray;\n"
+"	alternate-background-color: yellow;\n"
+"}\n"
+"\n"
+"QListView::item {\n"
+"	margin-top:2px;\n"
+"}\n"
+"QListView::item:selected:!active {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                stop: 0 #ABAFE5, stop: 1 #8588B2);\n"
+"}\n"
+"\n"
+"QListView::item:selected:active {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                stop: 0 #6a6ea9, stop: 1 #888dd9);\n"
+"}\n"
+"\n"
+"QListView::item:hover {\n"
+"    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n"
+"                                stop: 0 #FAFBFE, stop: 1 #DCDEF1);\n"
+"}"));
         listWidget->setIconSize(QSize(96, 96));
         listWidget->setMovement(QListView::Static);
         listWidget->setFlow(QListView::LeftToRight);
@@ -92,8 +118,11 @@ public:
         gridLayout_2->setSpacing(6);
         gridLayout_2->setContentsMargins(11, 11, 11, 11);
         gridLayout_2->setObjectName(QStringLiteral("gridLayout_2"));
+        gridLayout_2->setContentsMargins(0, 0, 0, 0);
         eventList = new QListWidget(event_page);
         eventList->setObjectName(QStringLiteral("eventList"));
+        eventList->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        eventList->setSelectionMode(QAbstractItemView::NoSelection);
         eventList->setSpacing(8);
 
         gridLayout_2->addWidget(eventList, 0, 0, 1, 1);
@@ -105,6 +134,7 @@ public:
         gridLayout_3->setSpacing(6);
         gridLayout_3->setContentsMargins(11, 11, 11, 11);
         gridLayout_3->setObjectName(QStringLiteral("gridLayout_3"));
+        gridLayout_3->setContentsMargins(0, 0, 0, 0);
         calendarTable = new QTableWidget(calendar_page);
         if (calendarTable->columnCount() < 5)
             calendarTable->setColumnCount(5);
@@ -140,6 +170,7 @@ public:
         retranslateUi(MainWindow);
 
         listWidget->setCurrentRow(0);
+        stackedWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(MainWindow);

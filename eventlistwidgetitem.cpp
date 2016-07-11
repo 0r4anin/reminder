@@ -5,14 +5,36 @@ EventListWidgetItem::EventListWidgetItem(QWidget *parent) :
     ui(new Ui::uilistitem)
 {
     ui->setupUi(this);
-//    connect(ui->checkButton, SIGNAL());
+    connect(ui->checkButton, SIGNAL(released()), this, SLOT(changeEnabled()));
 
 
 }
 
 void EventListWidgetItem::changeEnabled()
 {
-
+    if (ui->eventName->isEnabled())
+    {
+        ui->eventName->setEnabled(false);
+        ui->eventTime->setEnabled(false);
+        ui->image->setEnabled(false);
+        ui->textMessage->setEnabled(false);
+        ui->repeatTextMessage->setEnabled(false);
+        ui->repeatTime->setEnabled(false);
+        ui->label->setEnabled(false);
+        ui->label_2->setEnabled(false);
+        ui->checkButton->setIcon(QIcon(":/icon/check.png"));
+    }else
+    {
+        ui->eventName->setEnabled(true);
+        ui->eventTime->setEnabled(true);
+        ui->image->setEnabled(true);
+        ui->textMessage->setEnabled(true);
+        ui->repeatTextMessage->setEnabled(true);
+        ui->repeatTime->setEnabled(true);
+        ui->label->setEnabled(true);
+        ui->label_2->setEnabled(true);
+        ui->checkButton->setIcon(QIcon(":/icon/sign-error.png"));
+    }
 }
 
 void EventListWidgetItem::setIconPath(QString path)

@@ -6,6 +6,7 @@
 #include <QSqlDatabase>
 #include <QDateTime>
 
+#include <QMenu>
 
 
 
@@ -18,6 +19,9 @@ public:
 
 signals:
     void showSettingsWindow();
+    void showAboutWindow();
+    void aboutToClose();
+
 
 public slots:
     void rereadsettings();
@@ -32,6 +36,7 @@ private:
     QSystemTrayIcon *trayIcon;
     QSqlDatabase _db;
     QDateTime _lastReminde;
+    QMenu *_mn;
 
 
     void checkDataBase();

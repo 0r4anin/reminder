@@ -12,6 +12,10 @@ MainWindow::MainWindow(Reminder *r, QWidget *parent) :
     connect(r, SIGNAL(showSettingsWindow()), this, SLOT(show()));
     connect(this, SIGNAL(settingsChanged()), r, SLOT(rereadsettings()));
     connect(ui->listWidget, SIGNAL(currentRowChanged(int)), ui->stackedWidget, SLOT(setCurrentIndex(int)));
+    connect(r, SIGNAL(aboutToClose()), this, SLOT(on_action_triggered()));
+
+
+    _readyToClose = false;
 
     //Засиделся
     EventListWidgetItem *nt = new EventListWidgetItem(this);
@@ -37,6 +41,8 @@ MainWindow::MainWindow(Reminder *r, QWidget *parent) :
     it->setSizeHint(QSize(0, nt->height()));
     ui->eventList->addItem(it);
     ui->eventList->setItemWidget(it,nt);
+
+    _r = r;
 }
 
 MainWindow::~MainWindow()
@@ -46,7 +52,18 @@ MainWindow::~MainWindow()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    event->ignore();
-    hide();
+    if (!_readyToClose)
+    {
+        event->ignore();
+        hide();
+        _r->showMessage("asdasd","adasda\naasadasd!!");
+    }
+
 }
 
+
+void MainWindow::on_action_triggered()
+{
+    _readyToClose = true;
+    this->close();
+}

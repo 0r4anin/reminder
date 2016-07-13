@@ -6,12 +6,21 @@
 #include <QTimer>
 #include <QSqlQuery>
 #include <QMenu>
+#include <QTime>
+#include <QtConcurrent/QtConcurrentRun>
 
-#include <reminder_def.h>
+#include <unistd.h>
+
+
 //используем screensaver
 #include <X11/Xlib.h>
 #include <X11/extensions/dpms.h>
 #include <X11/extensions/scrnsaver.h>
+#include <X11/Xutil.h>
+#include <X11/Xatom.h>
+#include <X11/Xos.h>
+#include <X11/extensions/shape.h>
+#include <X11/Xlocale.h>
 
 Reminder::Reminder(QObject *parent) : QObject(parent)
 {
@@ -36,12 +45,22 @@ Reminder::Reminder(QObject *parent) : QObject(parent)
     mn->addSeparator();
     mn->addAction("Выйти из программы", this, SIGNAL(aboutToClose()));
 
+
+    this->startTimer(1000);
+
     trayIcon->setContextMenu(mn);
 
     _mn = mn;
+    _eventCircleExit = false;
+    _iddleTime.start();
+    _goHomeTime.start();
+    _internetTime.start();
 
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(triggerTrayIcon(QSystemTrayIcon::ActivationReason)));
     _lastReminde = QDateTime::currentDateTime();
+
+    rereadsettings();
+
 }
 
 Reminder::~Reminder()
@@ -52,21 +71,30 @@ Reminder::~Reminder()
 void Reminder::rereadsettings()
 {
     //Нужно завести таймер на периодические напомнинания
+    _eventCircleExit = false;
+    _eventParams.clear();
+    QSqlQuery query;
+//    //нужно вычитать настройки по event`ам
+    query.exec("SELECT eventName, eventType, message1, message2, eventTimer1, eventTimer2, enabled FROM event");
 
-    if (!_db.isOpen())
+    while(query.next())
     {
-        _db.setDatabaseName(QCoreApplication::applicationDirPath() + SETTINGSDB_PATH);
-        if (!_db.open())
-        {
-            QMessageBox::critical(0, trUtf8("Напоминалка"),
-                                  trUtf8("Не могу открыть базу с настройками %1").arg(SETTINGSDB_PATH),
-                                  QMessageBox::Ok);
-        }
+        EventHolder tmp;
+        tmp.eventName = query.value(0).toString();
+        tmp.eventType = query.value(1).toInt();
+        tmp.msg1 = query.value(2).toString();
+        tmp.msg2 = query.value(3).toString();
+        tmp.timer1 = query.value(4).toUInt();
+        tmp.timer2 = query.value(5).toUInt();
+        tmp.enabled = query.value(5).toUInt() > 0 ? true : false;
+        tmp.msg1Showed = false;
+        tmp.msg2Showed = false;
+        _eventParams.insert(query.value(1).toInt(), tmp);
     }
 
-//    QSqlQuery query;
-    //нужно вычитать настройки по event`ам
-//    query.exec();
+
+    _eventCircleExit = true;
+
 }
 
 void Reminder::showTrayIcon()
@@ -88,7 +116,7 @@ void Reminder::showMessage(QString title, QString message)
     }
     else //отложим напоминание
     {
-//        QTimer::singleShot((QDateTime::currentDateTime().toTime_t() - _lastReminde.toTime_t() + 1)*1000, this, showMessage(title, message));//используем лямбда
+        _messageQuery.append(QStringList()<<title<<message);
     }
 }
 
@@ -109,6 +137,85 @@ void Reminder::triggerTrayIcon(QSystemTrayIcon::ActivationReason reason)
     default:
         qDebug()<<"не знаю ничего - такого не обрабатывается";
         break;
+    }
+}
+
+void Reminder::timerEvent(QTimerEvent *)
+{
+    if (!_messageQuery.isEmpty())
+    {
+        QStringList lst = _messageQuery.takeFirst();
+        showMessage(lst.at(0),lst.at(1));
+    }
+
+
+    if(_eventCircleExit)
+    {
+        if (_eventParams[1].enabled ) // событие просиживания штанов
+        {
+            if (_iddleTime.elapsed() > _eventParams[1].timer2 * 1000 && !_eventParams[1].msg2Showed)
+            {
+                    //показать msg2
+
+                _eventParams[1].msg2Showed = true;
+            }
+            else if (_iddleTime.elapsed() > _eventParams[1].timer1 * 1000 && !_eventParams[1].msg1Showed)
+            {
+                showMessage(_eventParams[1].eventName, _eventParams[1].msg1);
+                _eventParams[1].msg1Showed = true;
+
+            }
+            else if (getIddleTime() > 60000)
+            {
+                _iddleTime.restart();
+                _eventParams[1].msg1Showed = false;
+                _eventParams[1].msg2Showed = false;
+
+            }
+
+        }
+
+        if (_eventParams[2].enabled ) // событие пора собираться домой
+        {
+            if (_iddleTime.elapsed() > _eventParams[2].timer2 * 1000 && !_eventParams[2].msg2Showed)
+            {
+
+                //показать msg2
+                _eventParams[2].msg2Showed = true;
+
+            } else if (_iddleTime.elapsed() > _eventParams[2].timer1 * 1000 && !_eventParams[2].msg1Showed)
+            {
+
+                showMessage(_eventParams[2].eventName, _eventParams[2].msg1);
+
+                _eventParams[2].msg1Showed = true;
+
+            }
+        }
+
+        if (_eventParams[3].enabled ) // событие сидения в интернете
+        {
+            QString str = getFocusWindowName();
+
+
+            if (str.contains("Chrome"))
+            {
+                if (_internetTime.elapsed() > _eventParams[3].timer2 * 1000 && !_eventParams[3].msg2Showed)
+                {
+                    _eventParams[3].msg2Showed = true;
+                }else if (_internetTime.elapsed() > _eventParams[3].timer1 * 1000 && !_eventParams[3].msg1Showed)
+                {
+                    showMessage(_eventParams[3].eventName, _eventParams[3].msg1);
+                    _eventParams[3].msg1Showed = true;
+                }
+
+            }else
+            {
+                _internetTime.restart();
+                _eventParams[3].msg1Showed = false;
+                _eventParams[3].msg2Showed = false;
+            }
+        }
     }
 }
 
@@ -134,6 +241,19 @@ void Reminder::checkDataBase()
 
 
     _db = QSqlDatabase::addDatabase("QSQLITE");
+
+
+    if (!_db.isOpen())
+    {
+        _db.setDatabaseName(QCoreApplication::applicationDirPath() + SETTINGSDB_PATH);
+        if (!_db.open())
+        {
+            QMessageBox::critical(0, trUtf8("Напоминалка"),
+                                  trUtf8("Не могу открыть базу с настройками %1").arg(SETTINGSDB_PATH),
+                                  QMessageBox::Ok);
+            exit(0);
+        }
+    }
 
 
 }
@@ -198,4 +318,56 @@ quint64 Reminder::getIddleTime()
     XCloseDisplay(dpy);
     return _idleTime;
 }
+
+QString Reminder::getFocusWindowName()
+{
+    QString str;
+    XScreenSaverInfo ssi;
+    Display *dpy;
+    Window focus;
+    XTextProperty tp;
+
+    int revert;
+    char *window_name;
+    dpy = XOpenDisplay(NULL);
+    if (dpy == NULL) {
+        qDebug()<< "couldn't open display";
+        return str;
+    }
+
+    XGetInputFocus(dpy, &focus, &revert);
+    if (XFetchName(dpy, focus, &window_name))
+    {
+        str.append(window_name);
+    }
+    else if (!XGetWMName(dpy, focus, &tp)) { /* Get window name if any */
+        qDebug()<<" (has no name)";
+    } else if (tp.nitems > 0) {
+
+        {
+            int count = 0, i, ret;
+            char **list = NULL;
+            ret = XmbTextPropertyToTextList(dpy, &tp, &list, &count);
+            if((ret == Success || ret > 0) && list != NULL){
+                for(i=0; i<count; i++)
+                {
+                    str.append(list[i]);
+                }
+                XFreeStringList(list);
+            } else {
+                {
+                    str.append((char*)tp.value);
+                }
+            }
+        }
+
+    }
+
+    XCloseDisplay(dpy);
+//    qDebug()<<str;
+    return str;
+}
+
+
+
 

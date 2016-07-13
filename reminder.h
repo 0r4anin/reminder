@@ -5,9 +5,14 @@
 #include <QSystemTrayIcon>
 #include <QSqlDatabase>
 #include <QDateTime>
+#include <QStringList>
+#include <QList>
+#include <QTimerEvent>
+
+#include <reminder_def.h>
 
 #include <QMenu>
-
+#include <QMap>
 
 
 class Reminder : public QObject
@@ -23,6 +28,7 @@ signals:
     void aboutToClose();
 
 
+
 public slots:
     void rereadsettings();
     void showTrayIcon();
@@ -32,17 +38,26 @@ public slots:
 private slots:
     void triggerTrayIcon(QSystemTrayIcon::ActivationReason reason);
 
+protected:
+    virtual void timerEvent(QTimerEvent *);
+
 private:
     QSystemTrayIcon *trayIcon;
     QSqlDatabase _db;
     QDateTime _lastReminde;
     QMenu *_mn;
+    QMap<int, EventHolder> _eventParams;
+    QList<QStringList> _messageQuery;
+    QTime _iddleTime;
+    QTime _goHomeTime;
+    QTime _internetTime;
 
+
+    bool _eventCircleExit;
 
     void checkDataBase();
-    void eventCircle();
-
     quint64 getIddleTime();
+    QString getFocusWindowName();
 
 };
 

@@ -170,7 +170,7 @@ public:
         palette1.setBrush(QPalette::Disabled, QPalette::Base, brush1);
         palette1.setBrush(QPalette::Disabled, QPalette::Window, brush1);
         checkButton->setPalette(palette1);
-        checkButton->setAutoFillBackground(true);
+        checkButton->setAutoFillBackground(false);
         checkButton->setStyleSheet(QLatin1String("QToolButton#checkButton {\n"
 "	background-color: white\n"
 "}"));
@@ -262,7 +262,9 @@ public:
         checkButton->setText(QString());
         eventName->setText(QApplication::translate("uilistitem", "Event Name", 0));
         label->setText(QApplication::translate("uilistitem", "\320\222\321\200\320\265\320\274\321\217 \321\201\321\200\320\260\320\261\320\260\321\202\321\213\320\262\320\260\320\275\320\270\321\217:", 0));
+        eventTime->setDisplayFormat(QApplication::translate("uilistitem", "H:mm:ss", 0));
         label_2->setText(QApplication::translate("uilistitem", "\320\237\320\276\320\262\321\202\320\276\321\200\320\275\320\276\320\265 \321\201\321\200\320\260\320\261\320\260\321\202\321\213\320\262\320\260\320\275\320\270\320\265:", 0));
+        repeatTime->setDisplayFormat(QApplication::translate("uilistitem", "H:mm:ss", 0));
         textMessage->setText(QString());
         textMessage->setPlaceholderText(QApplication::translate("uilistitem", "\320\241\320\276\320\276\320\261\321\211\320\265\320\275\320\270\320\265 \320\277\321\200\320\270 \320\260\320\272\321\202\320\270\320\262\320\260\321\206\320\270\320\270", 0));
         repeatTextMessage->setText(QString());

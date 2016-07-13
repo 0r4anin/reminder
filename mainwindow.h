@@ -5,6 +5,7 @@
 #include <QWidget>
 #include <QSettings>
 #include <reminder.h>
+#include <eventlistwidgetitem.h>
 
 namespace Ui {
 class MainWindow;
@@ -28,7 +29,6 @@ private:
 
 protected:
     virtual void closeEvent(QCloseEvent *event);
-
 
 private slots:
     void on_action_triggered();

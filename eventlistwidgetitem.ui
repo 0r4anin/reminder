@@ -646,7 +646,7 @@
          </palette>
         </property>
         <property name="autoFillBackground">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
         <property name="styleSheet">
          <string notr="true">QToolButton#checkButton {
@@ -699,7 +699,11 @@
            </widget>
           </item>
           <item>
-           <widget class="QTimeEdit" name="eventTime"/>
+           <widget class="QTimeEdit" name="eventTime">
+            <property name="displayFormat">
+             <string>H:mm:ss</string>
+            </property>
+           </widget>
           </item>
           <item>
            <spacer name="horizontalSpacer_2">
@@ -726,7 +730,11 @@
            </widget>
           </item>
           <item>
-           <widget class="QTimeEdit" name="repeatTime"/>
+           <widget class="QTimeEdit" name="repeatTime">
+            <property name="displayFormat">
+             <string>H:mm:ss</string>
+            </property>
+           </widget>
           </item>
           <item>
            <spacer name="horizontalSpacer">

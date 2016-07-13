@@ -11,6 +11,7 @@ class EventListWidgetItem : public QWidget
 public:
     EventListWidgetItem(QWidget *parent = 0);
 
+    void loadFromDBByType(int type);
     void setIconPath(QString path);
     void setEventName(QString name);
     void setMessages(QString msg1, QString msg2);
@@ -18,10 +19,15 @@ public:
 
 private slots:
     void changeEnabled();
+    void saveChangesToDB();
+
+signals:
+    void hasChanges();
 
 
 private:
     Ui::uilistitem *ui;
+    int _currentType;
 };
 
 #endif // EVENTLISTWIDGETITEM_H

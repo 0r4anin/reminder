@@ -17,30 +17,17 @@ MainWindow::MainWindow(Reminder *r, QWidget *parent) :
 
     _readyToClose = false;
 
-    //Засиделся
-    EventListWidgetItem *nt = new EventListWidgetItem(this);
-    nt->setEventName("Заработался");
-    nt->setIconPath(":/icon/seeting.png");
-    QListWidgetItem *it = new QListWidgetItem();
-    it->setSizeHint(QSize(0, nt->height()));
-    ui->eventList->addItem(it);
-    ui->eventList->setItemWidget(it,nt);
-
-    nt = new EventListWidgetItem(this);
-    nt->setEventName("Пора домой");
-    nt->setIconPath(":/icon/work_time.png");
-    it = new QListWidgetItem();
-    it->setSizeHint(QSize(0, nt->height()));
-    ui->eventList->addItem(it);
-    ui->eventList->setItemWidget(it,nt);
-
-    nt = new EventListWidgetItem(this);
-    nt->setEventName("Хватит сидеть в интернете");
-    nt->setIconPath(":/icon/internet.png");
-    it = new QListWidgetItem();
-    it->setSizeHint(QSize(0, nt->height()));
-    ui->eventList->addItem(it);
-    ui->eventList->setItemWidget(it,nt);
+    //заводим event
+    for (int i=1; i <= 3; i++)
+    {
+        EventListWidgetItem *nt = new EventListWidgetItem(this);
+        nt->loadFromDBByType(i);
+        QListWidgetItem *it = new QListWidgetItem();
+        it->setSizeHint(QSize(0, nt->height()));
+        ui->eventList->addItem(it);
+        ui->eventList->setItemWidget(it,nt);
+        connect(nt, SIGNAL(hasChanges()), r, SLOT(rereadsettings()));
+    }
 
     _r = r;
 }
@@ -56,11 +43,10 @@ void MainWindow::closeEvent(QCloseEvent *event)
     {
         event->ignore();
         hide();
-        _r->showMessage("asdasd","adasda\naasadasd!!");
+
     }
 
 }
-
 
 void MainWindow::on_action_triggered()
 {
